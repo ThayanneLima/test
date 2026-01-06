@@ -23,19 +23,20 @@ Adafruit_SSD1306 display(128, 64, &Wire, OLED_RST);
 Adafruit_INA219 ina219(0x40);
 
 // payload para envio
-uint8_t payload[4];
+uint8_t payload[9];
 
 //PROTÓTIPOS DE FUNÇÕES
-void sensors_build_payload(uint8_t *payload);
+void sensors_build_payload();
 void sensors_setup();
 
 //configuração de padrão de segurança
 //descomentar a configuração desejada
 #define USE_OTAA
 //#define USE_ABP 
+
 #ifdef USE_ABP //dados atualizados
-  static const PROGMEM u1_t NWKSKEY[16] = { 0xD2, 0xAF, 0x51, 0xA7, 0xE5, 0x1B, 0x8E, 0xC8, 0xA6, 0x0D, 0x43, 0x84, 0xCE, 0x48, 0xFD, 0x3A };
-  static const u1_t PROGMEM APPSKEY[16] = { 0xF5, 0x9D, 0x4E, 0x58, 0x41, 0x51, 0x1C, 0x36, 0xAE, 0x04, 0xF9, 0xCB, 0x77, 0x6B, 0x54, 0x82 };
+  static const PROGMEM u1_t NWKSKEY[16] = { 0xD2, 0xAF, 0x51, 0xA7, 0xE5, 0x1B, 0x8E, 0xC8, 0xA6, 0x0D, 0x43, 0x84, 0xCE, 0x48, 0xFD, 0x3A }; //msb format
+  static const u1_t PROGMEM APPSKEY[16] = { 0xF5, 0x9D, 0x4E, 0x58, 0x41, 0x51, 0x1C, 0x36, 0xAE, 0x04, 0xF9, 0xCB, 0x77, 0x6B, 0x54, 0x82 }; //msb format
   static const u4_t DEVADDR = 0x260DB618;
   void os_getArtEui (u1_t* buf) { }
   void os_getDevEui (u1_t* buf) { }
@@ -310,7 +311,6 @@ void setup()
   Serial.begin(115200);
   Serial.println(F("Starting"));
 
-  sensors_setup();
   // LMIC init
   os_init();
   // Reset the MAC state. Session and pending data transfers will be discarded.
@@ -365,6 +365,7 @@ void setup()
 
   Serial.println("Sensor BMP280 iniciado.");
 
+  sensors_setup();
   
 }
 
