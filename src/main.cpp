@@ -1,4 +1,4 @@
-//importação de biblioteca
+//importação de biblioteca - Versão de envio com sucesso
 #include <Arduino.h> //caso não utilizar Arduino IDE
 #include <lmic.h>
 #include <Wire.h>
@@ -23,7 +23,7 @@ Adafruit_SSD1306 display(128, 64, &Wire, OLED_RST);
 Adafruit_INA219 ina219(0x40);
 
 // payload para envio
-uint8_t payload[9];
+uint8_t payload[10];
 
 //PROTÓTIPOS DE FUNÇÕES
 void sensors_build_payload();
@@ -311,20 +311,14 @@ void setup()
   Serial.begin(115200);
   Serial.println(F("Starting"));
 
-  // LMIC init
-  os_init();
-  // Reset the MAC state. Session and pending data transfers will be discarded.
-  LMIC_reset();
-
-  do_send(&sendjob); // Start
-
   // Display
   pinMode(OLED_RST, OUTPUT);
   digitalWrite(OLED_RST, LOW);
   delay(10);
   digitalWrite(OLED_RST, HIGH);
   delay(10);
-  // Wire.begin(OLED_SDA, OLED_SCL);
+  Wire.begin(OLED_SDA, OLED_SCL);
+
   if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR))
   {
     Serial.println("Falha ao iniciar o display OLED!");
@@ -366,6 +360,13 @@ void setup()
   Serial.println("Sensor BMP280 iniciado.");
 
   sensors_setup();
+
+  // LMIC init
+  os_init();
+  // Reset the MAC state. Session and pending data transfers will be discarded.
+  LMIC_reset();
+
+  do_send(&sendjob); // Start
   
 }
 
